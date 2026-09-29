@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Civil Disobedience｜重點批註</title>
+<style>
+:root{
+  --bg:#f5f3ee; --paper:#fffdf9; --ink:#1d2127; --muted:#697079; --line:#e2ddd1; --accent:#2e5c8a;
+  --font-en:"Charter","Iowan Old Style","Palatino Linotype","Georgia","Times New Roman",serif;
+  --font-zh:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  --font-ui:system-ui,-apple-system,"Segoe UI","PingFang TC","Noto Sans TC","Microsoft JhengHei",sans-serif;
+  --tint-a:.16;
+}
+@media (prefers-color-scheme: dark){
+  :root{ --bg:#15171b; --paper:#1c1f24; --ink:#e7e6e1; --muted:#9aa0a9; --line:#2d3139; --accent:#86b3e0; --tint-a:.28; }
+}
+/* question palette: --c = solid, --t = tint */
+.q0{--c:#7b818a}
+.q1{--c:#2f6db5}
+.q2{--c:#d9731a}
+.q3{--c:#2e9150}
+.q4{--c:#8a4fc4}
+.q5{--c:#cf3e57}
+.q6{--c:#138a8a}
+.q7{--c:#a8841a}
+.q8{--c:#5a6b9e}
+.q0,.q1,.q2,.q3,.q4,.q5,.q6,.q7,.q8{--t:color-mix(in srgb,var(--c) calc(var(--tint-a)*100%),transparent)}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font-ui);line-height:1.6;-webkit-text-size-adjust:100%}
+a{color:var(--accent)}
+
+/* top bar */
+.topbar{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:1px solid var(--line);box-shadow:0 1px 8px rgba(0,0,0,.05)}
+.topbar-inner{max-width:1440px;margin:0 auto;padding:10px 24px 6px;display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+.brand{flex:1;min-width:220px}
+.doc-title{font-weight:700;font-size:16px;line-height:1.3}
+.course{font-size:12.5px;color:var(--muted)}
+.nav{display:flex;gap:4px;flex-wrap:wrap}
+.nav a{font-size:13px;text-decoration:none;color:var(--ink);padding:6px 10px;border-radius:7px}
+.nav a:hover{background:var(--bg)}
+.legend{max-width:1440px;margin:0 auto;padding:4px 24px 10px;display:flex;gap:6px;flex-wrap:wrap}
+.chip{font:inherit;font-size:12.5px;display:inline-flex;align-items:center;gap:6px;border:1px solid var(--c);background:var(--t);color:var(--ink);padding:3px 10px 3px 4px;border-radius:999px;cursor:pointer;transition:opacity .15s}
+.chip b{background:var(--c);color:#fff;border-radius:999px;padding:1px 7px;font-size:11.5px}
+.chip[aria-pressed="true"]{box-shadow:0 0 0 2px var(--c)}
+body.focusing .chip[aria-pressed="false"]{opacity:.45}
+
+/* tags */
+.tag{display:inline-block;background:var(--c);color:#fff;font-size:12px;font-weight:600;padding:2px 9px;border-radius:5px;line-height:1.5;white-space:nowrap}
+
+/* overview */
+.overview{max-width:1440px;margin:0 auto;padding:32px 24px 12px}
+.overview h1{font-family:var(--font-en);font-size:clamp(24px,3.6vw,36px);line-height:1.2;margin:0 0 12px}
+.overview h1 small{display:block;font-family:var(--font-zh);font-size:.6em;color:var(--muted);font-weight:500;margin-top:4px}
+.gist{background:var(--paper);border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:8px;padding:12px 16px;max-width:920px;margin:0 0 16px}
+.questions{list-style:none;padding:0;margin:0;display:grid;gap:8px;max-width:1100px}
+.questions li{background:var(--paper);border:1px solid var(--line);border-left:4px solid var(--c);border-radius:8px;padding:9px 14px;font-size:14.5px}
+.questions .zh{display:block;color:var(--muted);font-size:13.5px;margin-top:2px}
+
+/* reading columns */
+.reading{max-width:1440px;margin:0 auto;padding:16px 24px 32px}
+.col-head{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);border-bottom:2px solid var(--ink);background:var(--paper);border-radius:10px 10px 0 0}
+.col-head span{padding:10px 22px}
+.col-head span+span{border-left:1px solid var(--line)}
+.pair{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);background:var(--paper);border-bottom:1px solid var(--line);scroll-margin-top:120px}
+.pair:target{outline:2px solid var(--accent);outline-offset:-2px}
+.src{padding:16px 22px;border-right:1px solid var(--line);font-family:var(--font-en);font-size:16.5px;line-height:1.75;position:relative}
+.src p{margin:0}
+.src p+p,.src blockquote+p,.src p+blockquote{margin-top:.7em}
+.src blockquote{margin:0;padding-left:14px;border-left:3px solid var(--line);font-style:italic}
+.src ul,.src ol{margin:.4em 0 0;padding-left:1.4em}
+.pno{display:inline-block;font-family:var(--font-ui);font-size:11px;color:var(--muted);margin-bottom:4px}
+.notes{padding:12px 16px;background:color-mix(in srgb,var(--bg) 55%,var(--paper));display:flex;flex-direction:column;gap:10px}
+.pair.h .src,.pair.h .notes{padding-top:26px;padding-bottom:10px}
+.pair.h h2{margin:0;font-size:19px;line-height:1.35}
+.pair.h .notes h2{font-family:var(--font-zh)}
+
+mark{background:var(--t);color:inherit;border-radius:3px;padding:0 2px;box-shadow:inset 0 -2px 0 var(--c);transition:background .15s,box-shadow .15s}
+mark:not([class]){--c:#c9a227;--t:rgba(201,162,39,.25)}
+
+.note{background:var(--paper);border:1px solid var(--line);border-left:4px solid var(--c);border-radius:8px;padding:10px 12px;font-family:var(--font-zh);font-size:14px;line-height:1.7;transition:opacity .15s}
+.note .tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px}
+.note dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:4px 10px}
+.note dt{font-weight:700;color:var(--c);font-size:12.5px;padding-top:2px;white-space:nowrap}
+.note dd{margin:0}
+.note.q0{border-left-style:dashed}
+
+/* focus mode */
+body.focusing mark:not(.is-focus){background:transparent;box-shadow:none}
+body.focusing .note:not(.is-focus){opacity:.35}
+body.focusing .answer:not(.is-focus){opacity:.4}
+
+/* worksheet */
+.worksheet{max-width:1440px;margin:0 auto;padding:24px 24px 16px;scroll-margin-top:110px}
+.worksheet>h2{font-size:22px;margin:0 0 14px;padding-bottom:8px;border-bottom:2px solid var(--ink)}
+.answers{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.answer{background:var(--paper);border:1px solid var(--line);border-top:5px solid var(--c);border-radius:10px;padding:16px 18px;font-family:var(--font-zh);font-size:14.5px;line-height:1.75;scroll-margin-top:120px;transition:opacity .15s}
+.answer header{display:flex;gap:10px;align-items:flex-start;margin-bottom:8px}
+.answer header .tag{font-size:13px;margin-top:3px}
+.answer h3{margin:0;font-size:16px;line-height:1.45;font-family:var(--font-en)}
+.answer h3 small{display:block;font-family:var(--font-zh);font-weight:500;color:var(--muted);font-size:13.5px}
+.answer .block{margin-top:10px}
+.answer h4{margin:0 0 4px;font-size:13px;color:var(--c);letter-spacing:.03em}
+.answer h4::before{content:"";display:inline-block;width:8px;height:8px;border-radius:2px;background:var(--c);margin-right:6px;vertical-align:1px}
+.answer p{margin:0}
+.answer ul{margin:0;padding-left:1.2em}
+.answer li{margin:3px 0}
+.answer q{font-family:var(--font-en);font-style:italic;background:var(--t);padding:0 3px;border-radius:3px}
+.answer .counter{background:color-mix(in srgb,var(--c) 6%,transparent);border-radius:6px;padding:8px 10px}
+.answer .links{margin-top:10px;font-size:12.5px;color:var(--muted)}
+.answer .links a,.answer li a{font-family:var(--font-ui);font-size:12px;text-decoration:none;border:1px solid var(--line);padding:0 5px;border-radius:4px;white-space:nowrap}
+
+.foot{text-align:center;color:var(--muted);font-size:12px;padding:24px 16px 40px}
+
+@media (max-width:900px){
+  .answers{grid-template-columns:1fr}
+}
+@media (max-width:760px){
+  .topbar-inner,.legend,.overview,.reading,.worksheet{padding-left:16px;padding-right:16px}
+  .col-head{display:none}
+  .pair{grid-template-columns:1fr}
+  .src{border-right:0;border-bottom:1px dashed var(--line);padding:14px}
+  .notes{padding:12px 14px}
+  .note dl{grid-template-columns:1fr}
+}
+@media print{
+  .topbar{position:static;box-shadow:none}
+  .nav{display:none}
+  body{background:#fff}
+  .pair,.answer{break-inside:avoid}
+}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <div class="doc-title">On the Duty of Civil Disobedience（開篇節選）</div>
+      <div class="course">範例課程：政治思想導論 · Week 5 · Thoreau (1849) · 示範 worksheet</div>
+    </div>
+    <nav class="nav">
+      <a href="#overview">導讀</a><a href="#reading">原文批註</a><a href="#worksheet">答題索引</a>
+    </nav>
+  </div>
+  <div class="legend" role="toolbar" aria-label="題目圖例（點擊可聚焦）">
+    <button type="button" class="chip q1" data-q="q1"><b>Q1</b>政府的角色</button>
+    <button type="button" class="chip q2" data-q="q2"><b>Q2</b>多數決批判</button>
+    <button type="button" class="chip q3" data-q="q3"><b>Q3</b>公民與服從</button>
+    <button type="button" class="chip q4" data-q="q4"><b>Q4</b>個人行動</button>
+  </div>
+</header>
+
+<section class="overview" id="overview">
+  <h1>On the Duty of Civil Disobedience <small>論公民不服從的義務（開篇 ¶1–¶7）</small></h1>
+  <p class="gist"><b>一句話主旨：</b>政府只是人民的工具，而多數決靠的是力量不是正義；因此當政府維護奴隸制、發動不義戰爭時，人必須「先做人，再做臣民」，以良知拒絕與它為伍。</p>
+  <ol class="questions">
+    <li class="q1"><span class="tag q1">Q1</span> What is Thoreau’s view of the proper role and limits of government? <span class="zh">梭羅如何看待政府應有的角色與限度？</span></li>
+    <li class="q2"><span class="tag q2">Q2</span> Why does Thoreau reject majority rule as a basis for justice? <span class="zh">梭羅為什麼認為多數決不能作為正義的基礎？</span></li>
+    <li class="q3"><span class="tag q3">Q3</span> How does Thoreau classify the ways people serve the State, and what does this imply about good citizenship? <span class="zh">梭羅如何區分人們服務國家的方式？這對「好公民」的意義有何啟示？</span></li>
+    <li class="q4"><span class="tag q4">Q4</span> What does Thoreau ask the individual to do, and how radical is his position? <span class="zh">梭羅要求個人採取什麼行動？他的立場有多激進？</span></li>
+  </ol>
+</section>
+
+<main class="reading" id="reading">
+  <div class="col-head"><span>Original Text</span><span>中文批註</span></div>
+
+  <section class="pair" id="p1">
+    <div class="src">
+      <span class="pno">¶1</span>
+      <p>I heartily accept the motto,—“That government is best which governs least;” and I should like to see it acted up to more rapidly and systematically. Carried out, it finally amounts to this, which also I believe—<mark class="q1" title="Q1 論點層">“That government is best which governs not at all;”</mark> and when men are prepared for it, that will be the kind of government which they will have. <mark class="q1" title="Q1 論點層">Government is at best but an expedient</mark>; but most governments are usually, and all governments are sometimes, inexpedient. The objections which have been brought against a standing army, and they are many and weighty, and deserve to prevail, may also at last be brought against a standing government. The standing army is only an arm of the standing government. The government itself, which is only the mode which the people have chosen to execute their will, is equally liable to be abused and perverted before the people can act through it. Witness the present Mexican war, <mark class="q1" title="Q1 證據層">the work of comparatively a few individuals using the standing government as their tool</mark>; for, in the outset, the people would not have consented to this measure.</p>
+    </div>
+    <div class="notes">
+      <article class="note q1">
+        <div class="tags"><span class="tag q1">Q1 政府的角色</span></div>
+        <dl>
+          <dt>段落功能</dt><dd>開場立論。借用一句當時流行的格言，再把它推到邏輯終點，確立全文對政府的基本定性：政府只是「權宜之計」。</dd>
+          <dt>論證邏輯</dt><dd>「管得最少最好」→ 推到極致 →「完全不管最好」，但加上條件「when men are prepared for it」。接著用<strong>類比</strong>（常備軍的弊病＝常設政府的弊病）與<strong>時事例證</strong>（墨西哥戰爭是少數人借政府之手發動）證明政府容易被濫用。</dd>
+          <dt>回應題目</dt><dd><b>Q1・論點層</b>：政府的正當性完全是工具性的——它只是「人民選來執行其意志的方式」，一旦被少數人挾持就背離了這個角色。</dd>
+        </dl>
+      </article>
+    </div>
+  </section>
+
+  <section class="pair" id="p2">
+    <div class="src">
+      <span class="pno">¶2</span>
+      <p>This American government,—what is it but a tradition, though a recent one, endeavoring to transmit itself unimpaired to posterity, but each instant losing some of its integrity? It has not the vitality and force of a single living man; for a single man can bend it to his will. It is a sort of wooden gun to the people themselves; and, if ever they should use it in earnest as a real one against each other, it will surely split. But it is not the less necessary for this; for the people must have some complicated machinery or other, and hear its din, to satisfy that idea of government which they have. Governments show thus how successfully men can be imposed on, even impose on themselves, for their own advantage. It is excellent, we must all allow; yet this government never of itself furthered any enterprise, but by the alacrity with which it got out of its way. <mark class="q1" title="Q1 證據層">It does not keep the country free. It does not settle the West. It does not educate.</mark> <mark class="q1" title="Q1 證據層">The character inherent in the American people has done all that has been accomplished</mark>; and it would have done somewhat more, if the government had not sometimes got in its way. For government is an expedient, by which men would fain succeed in letting one another alone; and, as has been said, when it is most expedient, the governed are most let alone by it. Trade and commerce, if they were not made of India rubber, would never manage to bounce over obstacles which legislators are continually putting in their way; and, if one were to judge these men wholly by the effects of their actions, and not partly by their intentions, they would deserve to be classed and punished with those mischievous persons who put obstructions on the railroads.</p>
+    </div>
+    <div class="notes">
+      <article class="note q1">
+        <div class="tags"><span class="tag q1">Q1 政府的角色</span></div>
+        <dl>
+          <dt>段落功能</dt><dd>舉證與諷刺。用一連串比喻（木頭槍、吵鬧的機器、橡膠）削弱政府的威信。</dd>
+          <dt>論證邏輯</dt><dd>先讓步（「it is not the less necessary」「It is excellent」），再反轉（「yet」）：政府唯一的功勞是「讓路」。三個短句「It does not…」形成排比，把國家的成就全部歸給人民的品格，進一步把立法者比作在鐵軌上放障礙物的人。</dd>
+          <dt>回應題目</dt><dd><b>Q1・證據層</b>：用列舉支撐「政府只是工具、甚至是阻礙」。注意這裡修辭大於論證——「從未推動任何事業」是誇大的全稱判斷，寫作業時可作為 Q1 限制層的素材。</dd>
+        </dl>
+      </article>
+    </div>
+  </section>
+
+  <section class="pair" id="p3">
+    <div class="src">
+      <span class="pno">¶3</span>
+      <p>But, to speak practically and as a citizen, unlike those who call themselves no-government men, <mark class="q4" title="Q4 論點層">I ask for, not at once no government, but at once a better government.</mark> Let every man make known what kind of government would command his respect, and that will be one step toward obtaining it.</p>
+    </div>
+    <div class="notes">
+      <article class="note q4">
+        <div class="tags"><span class="tag q4">Q4 個人行動</span><span class="tag q1">Q1 政府的角色</span></div>
+        <dl>
+          <dt>段落功能</dt><dd>關鍵轉折與自我定位。「But, to speak practically」把前兩段的理想論調拉回現實。</dd>
+          <dt>論證邏輯</dt><dd>預先回應「你是無政府主義者」的指控：區分理想（最終沒有政府）與實踐（現在要更好的政府）。並提出第一個具體行動：每個人公開表明什麼樣的政府值得尊敬。</dd>
+          <dt>回應題目</dt><dd><b>Q4・論點層</b>：個人的第一步是「表態」。<b>Q1・限制層</b>：為 ¶1 的激進說法加上限定——他不主張立即廢除政府，這是判斷他立場有多激進的關鍵證據。</dd>
+        </dl>
+      </article>
+    </div>
+  </section>
+
+  <section class="pair" id="p4">
+    <div class="src">
+      <span class="pno">¶4</span>
+      <p>After all, the practical reason why, when the power is once in the hands of the people, a majority are permitted, and for a long period continue, to rule, is not because they are most likely to be in the right, nor because this seems fairest to the minority, but <mark class="q2" title="Q2 論點層">because they are physically the strongest</mark>. But a government in which the majority rule in all cases can not be based on justice, even as far as men understand it. Can there not be a government in which the majorities do not virtually decide right and wrong, but conscience?—in which majorities decide only those questions to which the rule of expediency is applicable? Must the citizen ever for a moment, or in the least degree, resign his conscience to the legislator? Why has every man a conscience, then? <mark class="q3" title="Q3 論點層">I think that we should be men first, and subjects afterward.</mark> It is not desirable to cultivate a respect for the law, so much as for the right. The only obligation which I have a right to assume, is to do at any time what I think right. It is truly enough said that a corporation has no conscience; but a corporation of conscientious men is a corporation with a conscience. <mark class="q2" title="Q2 證據層">Law never made men a whit more just</mark>; and, by means of their respect for it, even the well-disposed are daily made the agents of injustice. A common and natural result of an undue respect for the law is, that you may see a file of soldiers, colonel, captain, corporal, privates, powder-monkeys and all, marching in admirable order over hill and dale to the wars, <mark class="q3" title="Q3 證據層">against their wills, aye, against their common sense and consciences</mark>, which makes it very steep marching indeed, and produces a palpitation of the heart. They have no doubt that it is a damnable business in which they are concerned; they are all peaceably inclined. Now, what are they? Men at all? or small movable forts and magazines, at the service of some unscrupulous man in power? Visit the Navy Yard, and behold a marine, such a man as an American government can make, or such as it can make a man with its black arts, a mere shadow and reminiscence of humanity, a man laid out alive and standing, and already, as one may say, buried under arms with funeral accompaniment, though it may be</p>
+      <blockquote>“Not a drum was heard, not a funeral note,<br>As his corpse to the ramparts we hurried;<br>Not a soldier discharged his farewell shot<br>O’er the grave where our hero we buried.”</blockquote>
+    </div>
+    <div class="notes">
+      <article class="note q2">
+        <div class="tags"><span class="tag q2">Q2 多數決批判</span></div>
+        <dl>
+          <dt>段落功能</dt><dd>全文的理論核心。從「政府是什麼」轉向「政府憑什麼有權威」。</dd>
+          <dt>論證邏輯</dt><dd><strong>排除法</strong>：多數能統治不是因為①最可能正確，也不是因為②最公平，而是因為③力量最大。既然權威來自力量，就不能保證正義。接著用一連串反問，把「良知」立為比多數與法律更高的判準，並劃出界線：多數只能決定「權宜」問題，不能決定道德問題。</dd>
+          <dt>回應題目</dt><dd><b>Q2・論點層</b>：多數決的實際基礎是體力優勢，所以「在所有情況下」都由多數決定的政府不可能建立在正義上。<b>Q2・證據層</b>：「Law never made men a whit more just」——守法本身不產生正義。</dd>
+        </dl>
+      </article>
+      <article class="note q3">
+        <div class="tags"><span class="tag q3">Q3 公民與服從</span></div>
+        <dl>
+          <dt>段落功能</dt><dd>提出全文最著名的命題，並用士兵的形象具體化抽象論點。</dd>
+          <dt>論證邏輯</dt><dd>「先做人，再做臣民」確立身分的優先順序；士兵明知是「該死的勾當」仍整齊行軍，示範了過度守法如何讓善良的人成為不義的工具。引詩把活著的士兵寫成「已被埋葬」的人，強化「喪失人性」的意象。</dd>
+          <dt>回應題目</dt><dd><b>Q3・論點層</b>：好公民的前提是保有道德主體性。<b>Q3・證據層</b>：士兵與海軍陸戰隊員是「只剩身體服從」的反面例子。</dd>
+        </dl>
+      </article>
+    </div>
+  </section>
+
+  <section class="pair" id="p5">
+    <div class="src">
+      <span class="pno">¶5</span>
+      <p>The mass of men serve the State thus, <mark class="q3" title="Q3 論點層">not as men mainly, but as machines, with their bodies</mark>. They are the standing army, and the militia, jailers, constables, posse comitatus, &amp;c. In most cases there is no free exercise whatever of the judgment or of the moral sense; but they put themselves on a level with wood and earth and stones; and wooden men can perhaps be manufactured that will serve the purpose as well. Such command no more respect than men of straw, or a lump of dirt. They have the same sort of worth only as horses and dogs. Yet such as these even are commonly esteemed good citizens. Others, as most legislators, politicians, lawyers, ministers, and office-holders, serve the state chiefly with their heads; and, as they rarely make any moral distinctions, they are as likely to serve the devil, without intending it, as God. A very few, as heroes, patriots, martyrs, reformers in the great sense, and men, <mark class="q3" title="Q3 論點層">serve the State with their consciences also, and so necessarily resist it for the most part</mark>; and they are commonly treated by it as enemies. A wise man will only be useful as a man, and will not submit to be “clay,” and “stop a hole to keep the wind away,” but leave that office to his dust at least:</p>
+      <blockquote>“I am too high-born to be propertied,<br>To be a secondary at control,<br>Or useful serving-man and instrument<br>To any sovereign state throughout the world.”</blockquote>
+    </div>
+    <div class="notes">
+      <article class="note q3">
+        <div class="tags"><span class="tag q3">Q3 公民與服從</span></div>
+        <dl>
+          <dt>段落功能</dt><dd>分類與重新定義。把「為國服務」拆成三個等級，顛覆一般人對「好公民」的理解。</dd>
+          <dt>論證邏輯</dt><dd>三分法：<strong>身體</strong>（士兵、獄卒——如機器、木頭人）→ <strong>頭腦</strong>（立法者、律師、牧師——不做道德區分，可能無意中侍奉魔鬼）→ <strong>良知</strong>（英雄、改革者——必然反抗國家，被當成敵人）。層級越高，越可能與國家衝突，形成弔詭：最真誠的服務看起來像背叛。</dd>
+          <dt>回應題目</dt><dd><b>Q3・論點層</b>：這是 Q3 的主要答案來源。「Yet such as these even are commonly esteemed good citizens」直接點出社會對好公民的定義是錯的。</dd>
+        </dl>
+      </article>
+    </div>
+  </section>
+
+  <section class="pair" id="p6">
+    <div class="src">
+      <span class="pno">¶6</span>
+      <p>He who gives himself entirely to his fellow-men appears to them useless and selfish; but he who gives himself partially to them is pronounced a benefactor and philanthropist.</p>
+    </div>
+    <div class="notes">
+      <article class="note q3">
+        <div class="tags"><span class="tag q3">Q3 公民與服從</span></div>
+        <dl>
+          <dt>段落功能</dt><dd>一句話的格言式小結，收束 ¶5 的分類。</dd>
+          <dt>論證邏輯</dt><dd>用對仗句重述 ¶5 的弔詭：全心奉獻（以良知服務）的人被視為無用自私，部分奉獻（順從體制）的人卻被讚揚。</dd>
+          <dt>回應題目</dt><dd><b>Q3・證據層</b>：說明社會評價機制本身是顛倒的，為「好公民需要重新定義」提供支撐。</dd>
+        </dl>
+      </article>
+    </div>
+  </section>
+
+  <section class="pair" id="p7">
+    <div class="src">
+      <span class="pno">¶7</span>
+      <p>How does it become a man to behave toward the American government today? I answer that <mark class="q4" title="Q4 論點層">he cannot without disgrace be associated with it</mark>. I cannot for an instant recognize that political organization as my government <mark class="q4" title="Q4 證據層">which is the slave’s government also</mark>.</p>
+    </div>
+    <div class="notes">
+      <article class="note q4">
+        <div class="tags"><span class="tag q4">Q4 個人行動</span></div>
+        <dl>
+          <dt>段落功能</dt><dd>從原則轉入應用：把前面的理論套到「今天的美國政府」。</dd>
+          <dt>論證邏輯</dt><dd>自問自答。前提（¶4：人應依良知行事）＋事實（這個政府維護奴隸制）→ 結論：與它有所牽連就是恥辱。「today」把論證限定在具體的歷史情境，而非普遍的無政府主張。</dd>
+          <dt>回應題目</dt><dd><b>Q4・論點層</b>：個人應拒絕承認、拒絕與不義政府「有所牽連」。具體要怎麼做（例如拒絕納稅）在節選範圍之外的後文才展開。</dd>
+        </dl>
+      </article>
+    </div>
+  </section>
+</main>
+
+<section class="worksheet" id="worksheet">
+  <h2>Worksheet 答題索引</h2>
+  <div class="answers">
+    <article class="answer q1" id="a-q1">
+      <header>
+        <span class="tag q1">Q1</span>
+        <h3>What is Thoreau’s view of the proper role and limits of government?<small>梭羅如何看待政府應有的角色與限度？</small></h3>
+      </header>
+      <div class="block"><h4>核心論點</h4><p>梭羅把政府定位為純粹的<b>工具</b>（expedient）：它的價值只在於執行人民意志、讓人們「互不干涉」，本身沒有內在權威。理想上政府越少越好，最終「完全不管」；但這個理想附帶條件——要等「人們準備好了」。因此他的政府觀是「理想上的無政府、實踐上的改良主義」。</p></div>
+      <div class="block"><h4>關鍵證據</h4>
+        <ul>
+          <li><q>Government is at best but an expedient</q> <a href="#p1">¶1</a> —— 全文的基本定性，政府只有工具價值。</li>
+          <li><q>a few individuals using the standing government as their tool</q> <a href="#p1">¶1</a> —— 墨西哥戰爭證明工具容易被少數人挾持。</li>
+          <li><q>It does not keep the country free. It does not settle the West. It does not educate.</q> <a href="#p2">¶2</a> —— 把國家成就歸給人民品格，否定政府的積極貢獻。</li>
+        </ul>
+      </div>
+      <div class="block counter"><h4>潛在反駁／局限</h4>
+        <ul>
+          <li><b>以偏概全：</b>¶2「從未推動任何事業」忽略了公共工程、郵政、法律秩序對商業的保障——梭羅自己也享有這些。</li>
+          <li><b>內在張力：</b>¶1 嚮往「完全不管的政府」，¶3 卻只要求「更好的政府」。梭羅用「when men are prepared for it」化解，但沒說明什麼叫「準備好」。</li>
+        </ul>
+      </div>
+      <p class="links">相關段落：<a href="#p1">¶1</a> <a href="#p2">¶2</a> <a href="#p3">¶3</a></p>
+    </article>
+
+    <article class="answer q2" id="a-q2">
+      <header>
+        <span class="tag q2">Q2</span>
+        <h3>Why does Thoreau reject majority rule as a basis for justice?<small>梭羅為什麼認為多數決不能作為正義的基礎？</small></h3>
+      </header>
+      <div class="block"><h4>核心論點</h4><p>梭羅用排除法指出：多數能統治，不是因為他們較可能正確、也不是因為較公平，而是因為<b>體力最強</b>。權威若來自力量，就與對錯無關，所以「在所有情況下」由多數決定的政府不可能建立在正義之上。他不是全盤否定多數決，而是劃界：多數可以決定「權宜」問題（如實務安排），道德是非則必須交給良知。</p></div>
+      <div class="block"><h4>關鍵證據</h4>
+        <ul>
+          <li><q>because they are physically the strongest</q> <a href="#p4">¶4</a> —— 揭露多數統治的實際基礎是力量。</li>
+          <li><q>majorities decide only those questions to which the rule of expediency is applicable</q> <a href="#p4">¶4</a> —— 為多數決劃出適用範圍。</li>
+          <li><q>Law never made men a whit more just</q> <a href="#p4">¶4</a> —— 經由多數產生的法律本身不產生正義。</li>
+        </ul>
+      </div>
+      <div class="block counter"><h4>潛在反駁／局限</h4>
+        <ul>
+          <li><b>忽略程序正當性：</b>民主理論會主張，多數決的正當性來自「平等對待每個人的判斷」與「和平解決分歧」，而不只是人多勢眾。梭羅的描述可能是對手立場的弱化版本。</li>
+          <li><b>良知分歧問題：</b>當時也有人憑「良知」支持奴隸制。若良知高於多數，誰的良知算數？梭羅沒有提供判準。</li>
+          <li><b>界線模糊：</b>哪些問題屬於「權宜」、哪些屬於「道德」，由誰決定？</li>
+        </ul>
+      </div>
+      <p class="links">相關段落：<a href="#p4">¶4</a></p>
+    </article>
+
+    <article class="answer q3" id="a-q3">
+      <header>
+        <span class="tag q3">Q3</span>
+        <h3>How does Thoreau classify the ways people serve the State, and what does this imply about good citizenship?<small>梭羅如何區分人們服務國家的方式？這對「好公民」有何啟示？</small></h3>
+      </header>
+      <div class="block"><h4>核心論點</h4><p>梭羅把服務分成三級：用<b>身體</b>（士兵、獄卒——如機器）、用<b>頭腦</b>（立法者、律師——不做道德區分）、用<b>良知</b>（英雄、改革者——必然反抗國家）。這顛覆了常識：社會稱讚的「好公民」只是順從的身體，真正以良知服務的人反被當成敵人。好公民的核心不是服從，而是<b>保有道德判斷</b>——「先做人，再做臣民」。</p></div>
+      <div class="block"><h4>關鍵證據</h4>
+        <ul>
+          <li><q>we should be men first, and subjects afterward</q> <a href="#p4">¶4</a> —— 身分的優先順序。</li>
+          <li><q>not as men mainly, but as machines, with their bodies</q> <a href="#p5">¶5</a> —— 三分法的第一級。</li>
+          <li><q>serve the State with their consciences also, and so necessarily resist it</q> <a href="#p5">¶5</a> —— 最高級的服務反而表現為反抗。</li>
+          <li><q>appears to them useless and selfish</q> <a href="#p6">¶6</a> —— 社會評價的顛倒。</li>
+        </ul>
+      </div>
+      <div class="block counter"><h4>潛在反駁／局限</h4>
+        <ul>
+          <li><b>菁英主義：</b>只有「極少數」人達到良知層級，把一般士兵比作「馬與狗」，對缺乏選擇權的底層（如被徵召者）過於苛刻。</li>
+          <li><b>二分過簡：</b>多數人同時用身體、頭腦與良知參與公共生活；「服從＝放棄道德」的等式未必成立，例如出於良知而選擇守法的人。</li>
+        </ul>
+      </div>
+      <p class="links">相關段落：<a href="#p4">¶4</a> <a href="#p5">¶5</a> <a href="#p6">¶6</a></p>
+    </article>
+
+    <article class="answer q4" id="a-q4">
+      <header>
+        <span class="tag q4">Q4</span>
+        <h3>What does Thoreau ask the individual to do, and how radical is his position?<small>梭羅要求個人採取什麼行動？他的立場有多激進？</small></h3>
+      </header>
+      <div class="block"><h4>核心論點</h4><p>在節選範圍內，梭羅要求兩件事：一是<b>表態</b>——說出什麼樣的政府值得尊敬（¶3）；二是<b>切割</b>——拒絕承認一個維護奴隸制的政府是「我的政府」（¶7）。他的立場在原則上激進（良知高於法律與多數），在方法上克制（不要求立即廢除政府、不主張暴力）。換言之，激進的是「服從的義務」被取消，而不是「推翻政府」。</p></div>
+      <div class="block"><h4>關鍵證據</h4>
+        <ul>
+          <li><q>not at once no government, but at once a better government</q> <a href="#p3">¶3</a> —— 明確拒絕無政府派標籤。</li>
+          <li><q>The only obligation which I have a right to assume, is to do at any time what I think right</q> <a href="#p4">¶4</a> —— 行動的原則基礎。</li>
+          <li><q>he cannot without disgrace be associated with it</q> <a href="#p7">¶7</a> —— 具體結論：與不義政府切割。</li>
+        </ul>
+      </div>
+      <div class="block counter"><h4>潛在反駁／局限</h4>
+        <ul>
+          <li><b>方法未明：</b>「不與之牽連」具體指什麼？節選中尚未說明（拒絕納稅等做法在後文）。</li>
+          <li><b>有效性質疑：</b>個人退出能否改變制度？從內部改革（投票、立法）是否更有效？</li>
+          <li><b>可行性與特權：</b>能夠「切割」的前提是承擔得起後果；對奴隸本身或弱勢者而言，這個選項並不存在。</li>
+        </ul>
+      </div>
+      <p class="links">相關段落：<a href="#p3">¶3</a> <a href="#p4">¶4</a> <a href="#p7">¶7</a></p>
+    </article>
+  </div>
+</section>
+
+<footer class="foot">由 deep-reader 產生 · 批註與答案僅供學習參考，請搭配原文自行判斷 · 原文為公有領域作品</footer>
+<script>
+(function(){
+  var body=document.body,current=null;
+  function focusQ(q){
+    current=(current===q)?null:q;
+    body.classList.toggle('focusing',!!current);
+    document.querySelectorAll('.chip[data-q]').forEach(function(c){c.setAttribute('aria-pressed',String(current!==null&&c.getAttribute('data-q')===current))});
+    document.querySelectorAll('mark,.note,.answer').forEach(function(el){el.classList.toggle('is-focus',!!current&&el.classList.contains(current))});
+    if(current){var first=document.querySelector('mark.'+current+',.note.'+current);if(first)first.scrollIntoView({behavior:'smooth',block:'center'})}
+  }
+  document.querySelectorAll('.chip[data-q]').forEach(function(c){c.setAttribute('aria-pressed','false')});
+  document.addEventListener('click',function(e){
+    var chip=e.target.closest('.chip[data-q]');
+    if(chip){focusQ(chip.getAttribute('data-q'));return}
+    var tag=e.target.closest('.note .tag');
+    if(tag){var m=(tag.className.match(/\bq([1-8])\b/)||[])[1];var a=m&&document.getElementById('a-q'+m);if(a)a.scrollIntoView({behavior:'smooth',block:'start'})}
+  });
+  document.querySelectorAll('.note .tag').forEach(function(t){if(/\bq[1-8]\b/.test(t.className)){t.style.cursor='pointer';t.title='跳到此題答案'}});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&current)focusQ(current)});
+})();
+</script>
+</body>
+</html>

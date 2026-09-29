@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Civil Disobedience｜邏輯梳理</title>
+<style>
+:root{
+  --bg:#f4f3ef; --paper:#fffdf9; --ink:#1d2127; --muted:#697079; --line:#e1dccf; --accent:#2e5c8a;
+  --claim:#2e5c8a; --reason:#2e8a55; --evidence:#b7791f; --assumption:#7a57b8; --objection:#c2410c; --response:#0f766e;
+  --font-en:"Charter","Iowan Old Style","Palatino Linotype","Georgia","Times New Roman",serif;
+  --font-zh:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  --font-ui:system-ui,-apple-system,"Segoe UI","PingFang TC","Noto Sans TC","Microsoft JhengHei",sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root{ --bg:#15171b; --paper:#1c1f24; --ink:#e7e6e1; --muted:#9aa0a9; --line:#2e323a; --accent:#86b3e0;
+    --claim:#7fb0e6; --reason:#6cc794; --evidence:#e2b35c; --assumption:#b39ae6; --objection:#f0875a; --response:#5cc9bd; }
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font-zh);line-height:1.7;-webkit-text-size-adjust:100%}
+a{color:var(--accent)}
+h2{font-size:22px;margin:0 0 16px;padding-bottom:8px;border-bottom:2px solid var(--ink)}
+h3{font-size:17px;margin:0 0 8px}
+h4{font-size:13px;margin:0 0 4px;color:var(--muted);letter-spacing:.04em}
+p{margin:0}
+p+p{margin-top:.6em}
+
+/* top bar */
+.topbar{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:1px solid var(--line);box-shadow:0 1px 8px rgba(0,0,0,.05)}
+.topbar-inner{max-width:1200px;margin:0 auto;padding:10px 24px;display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+.brand{flex:1;min-width:220px}
+.doc-title{font-weight:700;font-size:16px;line-height:1.3}
+.sub{font-size:12.5px;color:var(--muted)}
+.nav{display:flex;gap:2px;flex-wrap:wrap}
+.nav a{font-size:13px;text-decoration:none;color:var(--ink);padding:6px 9px;border-radius:7px}
+.nav a:hover,.nav a.active{background:var(--bg)}
+
+.wrap{max-width:1200px;margin:0 auto;padding:28px 24px 24px;display:flex;flex-direction:column;gap:40px}
+.wrap>section{scroll-margin-top:80px}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:18px 20px}
+
+/* thesis */
+.thesis{border-top:5px solid var(--claim)}
+.eyebrow{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--claim);font-weight:700;margin-bottom:8px}
+.thesis blockquote.en{font-family:var(--font-en);font-size:clamp(18px,2.4vw,23px);line-height:1.5;margin:0 0 10px;padding-left:16px;border-left:3px solid var(--claim)}
+.thesis cite,.ref{font-family:var(--font-ui);font-style:normal;font-size:11.5px;color:var(--muted);border:1px solid var(--line);border-radius:4px;padding:0 5px;white-space:nowrap}
+.thesis .zh{font-size:16.5px;margin-bottom:10px}
+.plain{background:color-mix(in srgb,var(--claim) 8%,transparent);border-radius:8px;padding:10px 14px}
+.meta-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:16px}
+.meta-grid>div{border:1px solid var(--line);border-radius:8px;padding:10px 12px;font-size:14px}
+.pill{display:inline-block;font-size:12px;border:1px solid var(--claim);color:var(--claim);border-radius:999px;padding:0 9px;margin:2px 4px 2px 0}
+
+/* argument map */
+.map-legend{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+.node-key{font-size:12.5px;padding:2px 10px;border-radius:6px;border:1.5px solid var(--k);color:var(--k);background:color-mix(in srgb,var(--k) 8%,var(--paper))}
+.node-key.assumption{border-style:dashed}
+.claim{--k:var(--claim)} .reason{--k:var(--reason)} .evidence{--k:var(--evidence)}
+.assumption{--k:var(--assumption)} .objection{--k:var(--objection)} .response{--k:var(--response)}
+.tree,.tree ul{list-style:none;margin:0;padding:0}
+.tree ul{margin-left:22px;padding-left:22px;border-left:2px solid var(--line)}
+.tree li{position:relative;padding-top:10px}
+.tree ul>li::before{content:"";position:absolute;left:-22px;top:32px;width:20px;border-top:2px solid var(--line)}
+.tree ul>li:last-child::after{content:"";position:absolute;left:-24px;top:34px;bottom:0;border-left:4px solid var(--bg)}
+.node{position:relative;background:var(--paper);border:1.5px solid var(--k);border-left-width:5px;border-radius:9px;padding:9px 14px 10px;max-width:760px;font-size:14.5px;cursor:default}
+.node.assumption{border-style:dashed;border-left-style:solid}
+.node .kind{display:inline-block;font-size:11.5px;font-weight:700;color:var(--k);letter-spacing:.04em;margin-right:6px}
+.node p{display:inline}
+.node .ref{margin-left:6px}
+.node.claim{background:color-mix(in srgb,var(--claim) 7%,var(--paper))}
+.node.has-kids>.kind::after{content:" ▾";font-weight:400;color:var(--muted)}
+li.collapsed>ul{display:none}
+li.collapsed>.node>.kind::after{content:" ▸"}
+.node.has-kids{cursor:pointer}
+
+/* flow */
+.flow{list-style:none;margin:0;padding:0;counter-reset:step}
+.step{display:grid;grid-template-columns:92px 1fr;gap:16px;position:relative;padding-bottom:18px}
+.step:not(:last-child)::after{content:"";position:absolute;left:45px;top:40px;bottom:0;border-left:2px dashed var(--line)}
+.step .range{counter-increment:step;font-family:var(--font-ui);font-size:12.5px;color:var(--muted);text-align:center;padding-top:6px}
+.step .range::before{content:counter(step);display:block;margin:0 auto 4px;width:28px;height:28px;line-height:28px;border-radius:50%;background:var(--ink);color:var(--paper);font-weight:700;font-size:13px}
+.step .body{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:12px 16px}
+.signpost{font-size:13px;color:var(--muted);margin-top:6px}
+.signpost em{font-family:var(--font-en);color:var(--ink);background:color-mix(in srgb,var(--evidence) 18%,transparent);padding:0 4px;border-radius:3px}
+
+/* toulmin */
+.toulmin{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:16px 18px}
+.toulmin+.toulmin{margin-top:16px}
+.t-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.t{border-radius:8px;padding:10px 12px;font-size:14px;border-top:3px solid var(--k);background:color-mix(in srgb,var(--k) 6%,var(--paper))}
+.t h4{color:var(--k)}
+.t.claim{--k:var(--claim)} .t.grounds{--k:var(--evidence)} .t.warrant{--k:var(--assumption)}
+.t.backing{--k:var(--reason)} .t.qualifier{--k:var(--muted)} .t.rebuttal{--k:var(--objection)}
+
+/* check */
+.check-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-bottom:16px}
+.check-grid ul,.card ul{margin:0;padding-left:1.2em}
+.check-grid li{margin:4px 0;font-size:14.5px}
+table{width:100%;border-collapse:collapse;background:var(--paper);border:1px solid var(--line);border-radius:10px;overflow:hidden;font-size:14px}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:12px;color:var(--muted);letter-spacing:.05em;background:color-mix(in srgb,var(--bg) 50%,var(--paper))}
+.strength{margin-bottom:16px}
+.dots{white-space:nowrap;letter-spacing:2px;color:var(--evidence);font-size:15px}
+.steelman{border-left:5px solid var(--objection)}
+.concepts td:first-child b{font-family:var(--font-en)}
+
+/* self check */
+details{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:0 16px;margin-bottom:8px}
+details summary{cursor:pointer;padding:12px 0;font-weight:600}
+details>*:not(summary){padding-bottom:12px}
+
+.foot{text-align:center;color:var(--muted);font-size:12px;padding:16px 16px 40px}
+
+@media (max-width:860px){
+  .meta-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .t-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .check-grid{grid-template-columns:1fr}
+}
+@media (max-width:560px){
+  .topbar-inner,.wrap{padding-left:16px;padding-right:16px}
+  .meta-grid,.t-grid{grid-template-columns:1fr}
+  .tree ul{margin-left:8px;padding-left:14px}
+  .tree ul>li::before{left:-14px;width:12px}
+  .tree ul>li:last-child::after{left:-16px}
+  .step{grid-template-columns:44px 1fr;gap:10px}
+  .step:not(:last-child)::after{left:21px}
+  .step .range{font-size:10.5px}
+  table{display:block;overflow-x:auto}
+}
+@media print{
+  .topbar{position:static;box-shadow:none}
+  .nav{display:none}
+  body{background:#fff}
+  .node,.step,.toulmin,.card{break-inside:avoid}
+  li.collapsed>ul{display:block}
+  details{display:block}
+}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <div class="doc-title">Civil Disobedience（開篇 ¶1–¶7）｜邏輯梳理</div>
+      <div class="sub">Henry David Thoreau · 1849</div>
+    </div>
+    <nav class="nav">
+      <a href="#thesis">主旨</a><a href="#map">論證地圖</a><a href="#flow">推進脈絡</a>
+      <a href="#toulmin">論證拆解</a><a href="#check">論證檢驗</a><a href="#concepts">關鍵概念</a><a href="#selfcheck">自我檢測</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <section id="thesis" class="card thesis">
+    <p class="eyebrow">核心主張 Thesis</p>
+    <blockquote class="en">“I think that we should be men first, and subjects afterward.” <cite>¶4</cite><br>“…he cannot without disgrace be associated with it.” <cite>¶7</cite></blockquote>
+    <p class="zh">（重建）政府只是工具，多數決靠的是力量而非正義；因此當政府維護奴隸制、發動不義戰爭時，個人應以良知而非法律或多數決來決定行為，並拒絕與這樣的政府為伍。</p>
+    <p class="plain"><b>白話版：</b>政府不是用來崇拜的，只是工具。人多不代表對。如果政府在做壞事，你照樣聽話，你就是幫兇——所以你要先當一個有良心的人，再當一個守法的國民。</p>
+    <div class="meta-grid">
+      <div><h4>問題意識</h4><p>個人對國家的服從義務有沒有界限？界限在哪？</p></div>
+      <div><h4>立場</h4><p>良知優先於法律與多數決；反對奴隸制與美墨戰爭；但拒絕被歸為「無政府派」。</p></div>
+      <div><h4>論證類型</h4><p><span class="pill">價值論證</span><span class="pill">類比</span><span class="pill">排除法</span><span class="pill">例證</span></p></div>
+      <div><h4>目標讀者</h4><p>同意「小政府」卻仍對國家惟命是從的美國北方公民。</p></div>
+    </div>
+  </section>
+
+  <section id="map">
+    <h2>論證地圖</h2>
+    <div class="map-legend">
+      <span class="node-key claim">主張</span><span class="node-key reason">理由</span>
+      <span class="node-key evidence">證據</span><span class="node-key assumption">隱含前提</span>
+      <span class="node-key objection">反駁</span><span class="node-key response">回應</span>
+    </div>
+    <ul class="tree">
+      <li>
+        <div class="node claim"><span class="kind">主張</span><p>個人應以良知而非法律或多數決指導行為，並拒絕與不義的政府為伍。</p><span class="ref">¶4, ¶7</span></div>
+        <ul>
+          <li>
+            <div class="node reason"><span class="kind">理由 1</span><p>政府只是權宜工具，本身沒有內在權威。</p><span class="ref">¶1–2</span></div>
+            <ul>
+              <li><div class="node evidence"><span class="kind">證據</span><p>類比：人們反對常備軍的理由，同樣適用於常設政府——兩者都會被濫用。</p><span class="ref">¶1</span></div></li>
+              <li><div class="node evidence"><span class="kind">證據</span><p>墨西哥戰爭：少數人借政府之手發動人民不會同意的戰爭。</p><span class="ref">¶1</span></div></li>
+              <li><div class="node evidence"><span class="kind">證據</span><p>政府沒有讓國家自由、沒有開拓西部、沒有辦教育；成就都屬於人民的品格。</p><span class="ref">¶2</span></div></li>
+              <li><div class="node assumption"><span class="kind">隱含前提</span><p>工具的正當性完全取決於它是否達成目的；失職的工具不值得服從。</p></div></li>
+            </ul>
+          </li>
+          <li>
+            <div class="node reason"><span class="kind">理由 2</span><p>多數決建立在力量而非正義上，不能決定道德是非。</p><span class="ref">¶4</span></div>
+            <ul>
+              <li><div class="node evidence"><span class="kind">證據</span><p>排除法：多數統治不是因為較可能正確、也不是因為較公平，而是「體力最強」。</p><span class="ref">¶4</span></div></li>
+              <li><div class="node assumption"><span class="kind">隱含前提</span><p>對錯與人數無關；道德真理不能由投票產生。</p></div></li>
+              <li><div class="node assumption"><span class="kind">隱含前提</span><p>每個人的良知是可靠的道德指引（「那人為什麼要有良知？」）。</p></div></li>
+            </ul>
+          </li>
+          <li>
+            <div class="node reason"><span class="kind">理由 3</span><p>盲目守法會讓善良的人成為不義的執行者。</p><span class="ref">¶4–6</span></div>
+            <ul>
+              <li><div class="node evidence"><span class="kind">證據</span><p>士兵違背意志與良知開赴戰場；海軍陸戰隊員如「活著被埋葬的人」。</p><span class="ref">¶4</span></div></li>
+              <li><div class="node evidence"><span class="kind">證據</span><p>三級服務：身體（機器）、頭腦（不做道德區分）、良知（必然反抗）。</p><span class="ref">¶5</span></div></li>
+              <li><div class="node assumption"><span class="kind">隱含前提</span><p>人要為自己參與的行為負道德責任，「奉命行事」不能免責。</p></div></li>
+            </ul>
+          </li>
+          <li>
+            <div class="node objection"><span class="kind">反駁（預期）</span><p>這不就是主張廢除政府的無政府主義嗎？</p></div>
+            <ul>
+              <li><div class="node response"><span class="kind">回應</span><p>「我要的不是立刻沒有政府，而是立刻有更好的政府。」</p><span class="ref">¶3</span></div></li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </section>
+
+  <section id="flow">
+    <h2>推進脈絡</h2>
+    <ol class="flow">
+      <li class="step">
+        <div class="range">¶1</div>
+        <div class="body">
+          <h3>借格言起手，推到極端</h3>
+          <p>接受「管最少的政府最好」，再推論到「完全不管最好」；確立政府＝權宜工具。</p>
+          <p class="signpost">路標詞：<em>Carried out, it finally amounts to this</em> —— 標示「把對方的前提推到邏輯終點」的歸謬式推進。</p>
+        </div>
+      </li>
+      <li class="step">
+        <div class="range">¶1–2</div>
+        <div class="body">
+          <h3>舉證：政府易被濫用、毫無建樹</h3>
+          <p>常備軍類比、墨西哥戰爭、「It does not…」排比，把成就歸給人民。</p>
+          <p class="signpost">路標詞：<em>Witness</em>（舉證）、<em>yet</em>（讓步後反轉）</p>
+        </div>
+      </li>
+      <li class="step">
+        <div class="range">¶3</div>
+        <div class="body">
+          <h3>讓步與定位：不是無政府派</h3>
+          <p>把理想拉回現實：現在要的是「更好的政府」，並提出第一個行動——表態。</p>
+          <p class="signpost">路標詞：<em>But, to speak practically</em> —— 從理想轉向實務的關鍵轉折。</p>
+        </div>
+      </li>
+      <li class="step">
+        <div class="range">¶4 前半</div>
+        <div class="body">
+          <h3>理論核心：拆解多數決的權威</h3>
+          <p>排除法證明多數統治靠力量；以反問把「良知」立為更高判準；提出「先做人，再做臣民」。</p>
+          <p class="signpost">路標詞：<em>After all</em>（回到根本）、<em>not because… nor because… but because</em>（排除法）</p>
+        </div>
+      </li>
+      <li class="step">
+        <div class="range">¶4 後半</div>
+        <div class="body">
+          <h3>例證：守法的道德代價</h3>
+          <p>士兵與海軍陸戰隊員的形象，把「尊重法律使人成為不義的工具」具體化。</p>
+          <p class="signpost">路標詞：<em>A common and natural result of…</em> —— 標示因果推論。</p>
+        </div>
+      </li>
+      <li class="step">
+        <div class="range">¶5–6</div>
+        <div class="body">
+          <h3>重新定義「服務國家」</h3>
+          <p>身體／頭腦／良知三分法；最高層級的服務反而表現為反抗，並被國家視為敵人。</p>
+          <p class="signpost">路標詞：<em>The mass of men… Others… A very few…</em> —— 由多到少的分類序列。</p>
+        </div>
+      </li>
+      <li class="step">
+        <div class="range">¶7</div>
+        <div class="body">
+          <h3>應用到當下：拒絕與奴隸制政府為伍</h3>
+          <p>原則（良知優先）＋事實（政府維護奴隸制）→ 結論：與之牽連即是恥辱。</p>
+          <p class="signpost">路標詞：<em>How does it become a man… I answer</em> —— 自問自答，把理論落地。</p>
+        </div>
+      </li>
+    </ol>
+  </section>
+
+  <section id="toulmin">
+    <h2>論證拆解（Toulmin 模型）</h2>
+    <article class="toulmin">
+      <h3>論證 1：多數決不能作為正義的基礎</h3>
+      <div class="t-grid">
+        <div class="t claim"><h4>主張 Claim</h4><p>在所有情況下都由多數統治的政府，不可能建立在正義之上。</p></div>
+        <div class="t grounds"><h4>根據 Grounds</h4><p>多數之所以能統治，是因為體力最強，而非最可能正確或最公平。（¶4）</p></div>
+        <div class="t warrant"><h4>保證 Warrant</h4><p>（未明示）一種決策方式若以力量為權威來源，就無法保證其結果正當。</p></div>
+        <div class="t backing"><h4>支援 Backing</h4><p>每個人都有良知——「那人為什麼要有良知？」——意味著道德判斷屬於個人，不能讓渡。</p></div>
+        <div class="t qualifier"><h4>限定 Qualifier</h4><p>「in all cases」：多數仍可決定「適用權宜法則」的問題。</p></div>
+        <div class="t rebuttal"><h4>反駁 Rebuttal</h4><p>若多數決的正當性來自程序公平與平等尊重每個人的判斷，而非力量，此論證的根據就被削弱。</p></div>
+      </div>
+    </article>
+    <article class="toulmin">
+      <h3>論證 2：人不能與今天的美國政府為伍</h3>
+      <div class="t-grid">
+        <div class="t claim"><h4>主張 Claim</h4><p>人不可能與當今美國政府有所牽連而不蒙羞。（¶7）</p></div>
+        <div class="t grounds"><h4>根據 Grounds</h4><p>這個政府同時是「奴隸的政府」，並發動人民不會同意的戰爭。（¶1、¶7）</p></div>
+        <div class="t warrant"><h4>保證 Warrant</h4><p>與不義的組織合作，就分擔了它的不義。（¶4：守法使善良的人成為不義的執行者）</p></div>
+        <div class="t backing"><h4>支援 Backing</h4><p>「我有權承擔的唯一義務，是隨時做我認為對的事。」（¶4）</p></div>
+        <div class="t qualifier"><h4>限定 Qualifier</h4><p>「today」：針對當下這個具體政府，而非所有政府。</p></div>
+        <div class="t rebuttal"><h4>反駁 Rebuttal</h4><p>從體制內改革（投票、立法）可能比退出更有效。節選中未回應；全文後段討論了投票的局限。</p></div>
+      </div>
+    </article>
+  </section>
+
+  <section id="check">
+    <h2>論證檢驗</h2>
+    <div class="check-grid">
+      <article class="card">
+        <h3>隱含前提</h3>
+        <ul>
+          <li><b>良知是可靠的道德指引</b>：最關鍵也最脆弱。良知因人而異，當時也有人憑良知支持奴隸制；梭羅沒有說明如何裁決良知之間的衝突。</li>
+          <li><b>政府只有工具價值</b>：可爭議。社會契約論者會主張政府不只執行意志，也建構並保障權利。</li>
+          <li><b>參與即共謀</b>：相對有力，但有程度之分——納稅、投票、從軍的道德責任是否相同？</li>
+        </ul>
+      </article>
+      <article class="card">
+        <h3>邏輯漏洞／謬誤風險</h3>
+        <ul>
+          <li><b>以偏概全</b>（¶2）：「政府從未憑自身推動任何事業」是修辭性的全稱判斷，忽略公共工程、郵政與法律秩序。</li>
+          <li><b>弱化對手立場</b>（¶4）：把多數決的理由化約為「力量」，略過了程序正當性的辯護。</li>
+          <li><b>訴諸情感</b>（¶4–5）：把士兵比作木頭、馬與狗，修辭上有力，但以貶抑代替了論證。</li>
+        </ul>
+      </article>
+    </div>
+    <table class="strength">
+      <thead><tr><th>分論點</th><th>證據類型</th><th>強度</th><th>評語</th></tr></thead>
+      <tbody>
+        <tr><td>政府容易被少數人濫用</td><td>時事例證（墨西哥戰爭）</td><td><span class="dots" data-score="4"></span></td><td>當時讀者共知的具體事例，說服力高。</td></tr>
+        <tr><td>政府本身毫無建樹</td><td>列舉＋斷言</td><td><span class="dots" data-score="2"></span></td><td>排比有力，但屬誇大的全稱判斷。</td></tr>
+        <tr><td>多數決基於力量</td><td>概念分析（排除法）</td><td><span class="dots" data-score="3"></span></td><td>抓住多數決的弱點，但忽略程序正當性。</td></tr>
+        <tr><td>守法使人成為不義的工具</td><td>生動例證（士兵）</td><td><span class="dots" data-score="4"></span></td><td>情感與邏輯兼具，但依賴「參與即共謀」前提。</td></tr>
+      </tbody>
+    </table>
+    <article class="card steelman">
+      <h3>最強反駁與作者的可能回應</h3>
+      <p><b>反駁（霍布斯式／民主程序論）：</b>在道德分歧的社會裡，如果每個人都以自己的良知為最高權威，法律將失去協調功能，社會會回到人人各行其是的狀態。多數決的價值正在於以和平方式解決分歧、平等對待每個人的判斷。</p>
+      <p><b>梭羅可能的回應：</b>他只要求在重大道德問題（奴隸制、侵略戰爭）上讓良知優先，日常「權宜」事務仍可交給多數；而且他採取非暴力、自己承擔後果的方式，不強迫他人。</p>
+      <p><b>評估：</b>回應部分成功——非暴力與自負後果降低了失序風險；但「哪些問題屬於良知範圍」的界線仍由個人自定，核心難題沒有解決。</p>
+    </article>
+  </section>
+
+  <section id="concepts">
+    <h2>關鍵概念</h2>
+    <table class="concepts">
+      <thead><tr><th>術語</th><th>作者的用法</th><th>在論證中的角色</th></tr></thead>
+      <tbody>
+        <tr><td><b>expedient</b><br>權宜之計</td><td>政府只是方便行事的手段，本身不是目的；與 inexpedient（礙事）形成文字遊戲。</td><td>理由 1 的基礎：否定政府的內在權威。</td></tr>
+        <tr><td><b>conscience</b><br>良知</td><td>每個人內在的道德判斷力，高於法律與多數。</td><td>整個論證的最終判準。</td></tr>
+        <tr><td><b>the right vs. the law</b><br>正當 vs. 法律</td><td>應尊重的是對錯本身，而不是條文。</td><td>切斷「合法＝正當」的等式。</td></tr>
+        <tr><td><b>men vs. subjects</b><br>人 vs. 臣民</td><td>道德主體的身分優先於政治服從的身分。</td><td>核心命題的兩端。</td></tr>
+        <tr><td><b>majority</b><br>多數</td><td>被重新描述為「體力最強的一方」，而非「民意」。</td><td>理由 2 的攻擊對象。</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section id="selfcheck">
+    <h2>讀後自我檢測</h2>
+    <details><summary>1. 梭羅是無政府主義者嗎？請用原文回答。</summary><p>理想上接近（¶1「完全不管的政府最好」），但實踐上不是：¶3 明確說「我要的不是立刻沒有政府，而是立刻有更好的政府」，並與「no-government men」劃清界線。</p></details>
+    <details><summary>2. 梭羅用什麼方法論證多數決不能決定正義？</summary><p>排除法：列出多數能統治的三個可能理由（最可能正確、最公平、最有力量），排除前兩者，剩下「力量」；而力量與正義無關。</p></details>
+    <details><summary>3. 為什麼「以頭腦服務國家」的人也有問題？</summary><p>因為他們「很少做道德區分」，所以可能在無意之間侍奉魔鬼——能力不等於道德判斷。</p></details>
+  </section>
+</main>
+
+<footer class="foot">由 deep-reader 產生 · 論證分析僅供學習參考 · 原文為公有領域作品</footer>
+<script>
+(function(){
+  // strength dots
+  document.querySelectorAll('.dots[data-score]').forEach(function(d){
+    var n=Math.max(0,Math.min(5,parseInt(d.getAttribute('data-score'),10)||0));
+    d.textContent='●'.repeat(n)+'○'.repeat(5-n);d.setAttribute('aria-label','強度 '+n+'/5');
+  });
+  // collapsible argument map
+  document.querySelectorAll('.tree li').forEach(function(li){
+    var node=li.querySelector(':scope>.node'),kids=li.querySelector(':scope>ul');
+    if(node&&kids){node.classList.add('has-kids');node.title='點擊展開／收合';
+      node.addEventListener('click',function(e){if(e.target.closest('a'))return;li.classList.toggle('collapsed')})}
+  });
+  // active nav link
+  var links=[].slice.call(document.querySelectorAll('.nav a[href^="#"]'));
+  if('IntersectionObserver' in window&&links.length){
+    var io=new IntersectionObserver(function(es){es.forEach(function(en){if(en.isIntersecting){links.forEach(function(a){a.classList.toggle('active',a.getAttribute('href')==='#'+en.target.id)})}})},{rootMargin:'-30% 0px -60% 0px'});
+    links.forEach(function(a){var s=document.querySelector(a.getAttribute('href'));if(s)io.observe(s)});
+  }
+})();
+</script>
+</body>
+</html>
