@@ -3,7 +3,7 @@ name: deep-reader
 description: Deep-reading companion for English papers, articles, and novels. Turns a PDF, URL, or pasted English text into polished standalone HTML study pages — (1) side-by-side English/Chinese bilingual translation, (2) color-coded annotated reading with paragraph-by-paragraph Chinese notes and a worksheet answer index, (3) argument/logic map. Use this whenever the user shares an English PDF, link, or long English text and wants it translated into Chinese, summarized, annotated, explained, or its reasoning clarified — e.g. 翻譯這篇論文、中英對照、雙語對照、重點摘要、批註、導讀、讀書報告、worksheet、課堂作業、邏輯梳理、論證結構、幫我讀這篇、看不懂這篇 — even if they never mention HTML or this skill.
 license: MIT
 metadata:
-  version: "1.0.0"
+  version: "1.0.1"
 ---
 
 # Deep Reader｜英文閱讀夥伴
@@ -71,6 +71,7 @@ metadata:
 ## 品質自我檢查（交付前）
 
 - 原文段落數與輸出段落數一致（翻譯模式逐段對齊，沒有漏段）。
+- 每個 PDF 換頁處都檢查過：停在半句的段落已和下一頁的後半句接回成同一段，沒有被拆成兩段或漏翻後半句。
 - 所有 `<mark>`、題號標籤、批註卡的顏色 class 與圖例一致（模式 2）。
 - 引用的原文句子確實出自原文，段落編號對得上——使用者會拿來寫作業，錯誤引用比沒有引用更糟。
 - HTML 用瀏覽器開啟不會跑版：標籤成對、沒有殘留的 `{{…}}` 佔位符。

@@ -98,6 +98,82 @@ def reflow(text: str) -> list[str]:
     return paras
 
 
+SENTENCE_END = re.compile(r"[.!?…][\"'”’)\]]*$")
+CAPTION = re.compile(r"^(fig\.?|figure|table|tab\.|algorithm|listing|chart|plate)\s*[\dIVX]", re.I)
+FOOTNOTE = re.compile(r"^([∗*†‡§]|\d{1,2}(?=[A-Za-z]))")
+HEADING = re.compile(r"^(\d+(\.\d+)*\.?|[IVX]+\.|[A-Z]\.)\s+[A-Z]")
+REFS = re.compile(r"^(\d+\.?\s+)?(references|bibliography|works cited|literature cited)\s*$", re.I)
+LIST_ITEM = re.compile(r"^(\[\d+\]|\(?\d{1,3}[.)]\s|[•▪◦–-]\s)")
+FUNCTION_WORDS = {
+    "a", "an", "the", "of", "to", "in", "on", "at", "by", "for", "with", "from", "as", "into", "than",
+    "and", "or", "but", "nor", "that", "which", "who", "whom", "whose", "is", "are", "was", "were",
+    "be", "been", "this", "these", "those", "its", "their", "his", "her", "our", "we", "it", "not",
+    "if", "when", "while", "because", "such", "between", "about", "under", "over", "via",
+}
+# a page that ends on one of these words cannot be the end of a sentence
+DANGLING = FUNCTION_WORDS - {"it", "we", "this", "these", "those", "not"}
+
+
+def is_prose(p: str) -> bool:
+    """Running English text has function words; tables, formulas and author lists mostly don't."""
+    chars = re.sub(r"\s", "", p)
+    if sum(c.isdigit() for c in chars) / max(1, len(chars)) >= 0.15:
+        return False  # table rows, numeric results
+    words = re.findall(r"[A-Za-z’']+", p)
+    if len(words) < 8:
+        return p[:1].islower()
+    return sum(w.lower() in FUNCTION_WORDS for w in words) / len(words) >= 0.12
+
+
+def join_fragments(head: str, tail: str) -> str:
+    if re.search(r"[A-Za-z]-$", head) and tail[:1].islower():
+        return head[:-1] + tail  # exam- / ple -> example
+    return head + " " + tail
+
+
+def stitch_pages(pages: list[list[str]]) -> int:
+    """Re-join paragraphs that a page break cut in half (in place).
+
+    A page often ends mid-sentence, and the rest of that sentence is printed on the
+    next page after running headers, figure labels or captions. Left alone, the second
+    half looks like an orphan fragment and tends to get dropped or mistranslated.
+    Returns the number of paragraphs stitched.
+    """
+    stitched = 0
+    for n in range(len(pages) - 1):
+        cur, nxt = pages[n], pages[n + 1]
+        if any(REFS.match(p) for p in cur):
+            break  # reference lists are kept verbatim and never translated; don't risk gluing entries
+
+        # last body paragraph on this page, skipping trailing footnotes / short footer lines
+        idx = next((j for j in range(len(cur) - 1, -1, -1)
+                    if len(cur[j]) >= 60 and not CAPTION.match(cur[j]) and not FOOTNOTE.match(cur[j])), None)
+        if idx is None or SENTENCE_END.search(cur[idx]):
+            continue
+        head = cur[idx]
+        last_word = (re.findall(r"[A-Za-z]+", head[-30:]) or [""])[-1].lower()
+        # walk past figure labels, captions and tables at the top of the next page
+        k = None
+        for j, p in enumerate(nxt[:10]):
+            if HEADING.match(p) and len(p) < 120:
+                break  # a new section starts: the cut paragraph really ended on the previous page
+            if CAPTION.match(p) or LIST_ITEM.match(p) or not is_prose(p):
+                continue
+            if len(p) < 60 and not p[:1].islower():
+                continue  # short label such as a figure's internal text
+            # lowercase start is a safe continuation; otherwise demand a dangling last word
+            if p[:1].islower() or (last_word in DANGLING or head.endswith((",", "-", "—"))):
+                k = j
+            break  # never skip over a real prose paragraph
+        if k is None:
+            continue
+        cont = nxt[k]
+        cur[idx] = join_fragments(head, cont)
+        del nxt[k]
+        stitched += 1
+    return stitched
+
+
 def from_pdf(data: bytes, page_range: tuple[int, int] | None) -> str:
     pages = pdf_pages(data)
     if page_range:
@@ -107,10 +183,13 @@ def from_pdf(data: bytes, page_range: tuple[int, int] | None) -> str:
     else:
         offset = 1
     pages = strip_repeating_lines(pages)
+    page_paras = [reflow(page) for page in pages]
+    stitched = stitch_pages(page_paras)
+    if stitched:
+        print(f"note: re-joined {stitched} paragraph(s) split across page breaks", file=sys.stderr)
     out = []
     total_chars = 0
-    for i, page in enumerate(pages, start=offset):
-        paras = reflow(page)
+    for i, paras in enumerate(page_paras, start=offset):
         total_chars += sum(len(p) for p in paras)
         out.append(f"[[page {i}]]")
         out.extend(paras)
