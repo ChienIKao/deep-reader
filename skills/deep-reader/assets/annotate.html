@@ -1,14 +1,14 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{{TITLE}}｜重點批註</title>
+<title>{{TITLE}} · Annotated Reading</title>
 <style>
 :root{
   --bg:#f5f3ee; --paper:#fffdf9; --ink:#1d2127; --muted:#697079; --line:#e2ddd1; --accent:#2e5c8a;
   --font-en:"Charter","Iowan Old Style","Palatino Linotype","Georgia","Times New Roman",serif;
-  --font-zh:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  --font-body:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,"PingFang TC","Noto Sans TC","Microsoft JhengHei",sans-serif;
   --font-ui:system-ui,-apple-system,"Segoe UI","PingFang TC","Noto Sans TC","Microsoft JhengHei",sans-serif;
   --tint-a:.16;
 }
@@ -53,11 +53,11 @@ body.focusing .chip[aria-pressed="false"]{opacity:.45}
 /* overview */
 .overview{max-width:1440px;margin:0 auto;padding:32px 24px 12px}
 .overview h1{font-family:var(--font-en);font-size:clamp(24px,3.6vw,36px);line-height:1.2;margin:0 0 12px}
-.overview h1 small{display:block;font-family:var(--font-zh);font-size:.6em;color:var(--muted);font-weight:500;margin-top:4px}
+.overview h1 small{display:block;font-family:var(--font-body);font-size:.6em;color:var(--muted);font-weight:500;margin-top:4px}
 .gist{background:var(--paper);border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:8px;padding:12px 16px;max-width:920px;margin:0 0 16px}
 .questions{list-style:none;padding:0;margin:0;display:grid;gap:8px;max-width:1100px}
 .questions li{background:var(--paper);border:1px solid var(--line);border-left:4px solid var(--c);border-radius:8px;padding:9px 14px;font-size:14.5px}
-.questions .zh{display:block;color:var(--muted);font-size:13.5px;margin-top:2px}
+.questions .zh,.questions .orig{display:block;color:var(--muted);font-size:13.5px;margin-top:2px}
 
 /* reading columns */
 .reading{max-width:1440px;margin:0 auto;padding:16px 24px 32px}
@@ -75,12 +75,12 @@ body.focusing .chip[aria-pressed="false"]{opacity:.45}
 .notes{padding:12px 16px;background:color-mix(in srgb,var(--bg) 55%,var(--paper));display:flex;flex-direction:column;gap:10px}
 .pair.h .src,.pair.h .notes{padding-top:26px;padding-bottom:10px}
 .pair.h h2{margin:0;font-size:19px;line-height:1.35}
-.pair.h .notes h2{font-family:var(--font-zh)}
+.pair.h .notes h2{font-family:var(--font-body)}
 
 mark{background:var(--t);color:inherit;border-radius:3px;padding:0 2px;box-shadow:inset 0 -2px 0 var(--c);transition:background .15s,box-shadow .15s}
 mark:not([class]){--c:#c9a227;--t:rgba(201,162,39,.25)}
 
-.note{background:var(--paper);border:1px solid var(--line);border-left:4px solid var(--c);border-radius:8px;padding:10px 12px;font-family:var(--font-zh);font-size:14px;line-height:1.7;transition:opacity .15s}
+.note{background:var(--paper);border:1px solid var(--line);border-left:4px solid var(--c);border-radius:8px;padding:10px 12px;font-family:var(--font-body);font-size:14px;line-height:1.7;transition:opacity .15s}
 .note .tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px}
 .note dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:4px 10px}
 .note dt{font-weight:700;color:var(--c);font-size:12.5px;padding-top:2px;white-space:nowrap}
@@ -96,11 +96,11 @@ body.focusing .answer:not(.is-focus){opacity:.4}
 .worksheet{max-width:1440px;margin:0 auto;padding:24px 24px 16px;scroll-margin-top:110px}
 .worksheet>h2{font-size:22px;margin:0 0 14px;padding-bottom:8px;border-bottom:2px solid var(--ink)}
 .answers{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
-.answer{background:var(--paper);border:1px solid var(--line);border-top:5px solid var(--c);border-radius:10px;padding:16px 18px;font-family:var(--font-zh);font-size:14.5px;line-height:1.75;scroll-margin-top:120px;transition:opacity .15s}
+.answer{background:var(--paper);border:1px solid var(--line);border-top:5px solid var(--c);border-radius:10px;padding:16px 18px;font-family:var(--font-body);font-size:14.5px;line-height:1.75;scroll-margin-top:120px;transition:opacity .15s}
 .answer header{display:flex;gap:10px;align-items:flex-start;margin-bottom:8px}
 .answer header .tag{font-size:13px;margin-top:3px}
 .answer h3{margin:0;font-size:16px;line-height:1.45;font-family:var(--font-en)}
-.answer h3 small{display:block;font-family:var(--font-zh);font-weight:500;color:var(--muted);font-size:13.5px}
+.answer h3 small{display:block;font-family:var(--font-body);font-weight:500;color:var(--muted);font-size:13.5px}
 .answer .block{margin-top:10px}
 .answer h4{margin:0 0 4px;font-size:13px;color:var(--c);letter-spacing:.03em}
 .answer h4::before{content:"";display:inline-block;width:8px;height:8px;border-radius:2px;background:var(--c);margin-right:6px;vertical-align:1px}
@@ -152,7 +152,7 @@ body.focusing .answer:not(.is-focus){opacity:.4}
     var tag=e.target.closest('.note .tag');
     if(tag){var m=(tag.className.match(/\bq([1-8])\b/)||[])[1];var a=m&&document.getElementById('a-q'+m);if(a)a.scrollIntoView({behavior:'smooth',block:'start'})}
   });
-  document.querySelectorAll('.note .tag').forEach(function(t){if(/\bq[1-8]\b/.test(t.className)){t.style.cursor='pointer';t.title='跳到此題答案'}});
+  document.querySelectorAll('.note .tag').forEach(function(t){if(/\bq[1-8]\b/.test(t.className)){t.style.cursor='pointer';t.title='Jump to this question's answer'}});
   document.addEventListener('keydown',function(e){if(e.key==='Escape'&&current)focusQ(current)});
 })();
 </script>

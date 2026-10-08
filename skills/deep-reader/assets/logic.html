@@ -1,15 +1,15 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{{TITLE}}｜邏輯梳理</title>
+<title>{{TITLE}} · Logic Map</title>
 <style>
 :root{
   --bg:#f4f3ef; --paper:#fffdf9; --ink:#1d2127; --muted:#697079; --line:#e1dccf; --accent:#2e5c8a;
   --claim:#2e5c8a; --reason:#2e8a55; --evidence:#b7791f; --assumption:#7a57b8; --objection:#c2410c; --response:#0f766e;
   --font-en:"Charter","Iowan Old Style","Palatino Linotype","Georgia","Times New Roman",serif;
-  --font-zh:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  --font-body:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,"PingFang TC","Noto Sans TC","Microsoft JhengHei",sans-serif;
   --font-ui:system-ui,-apple-system,"Segoe UI","PingFang TC","Noto Sans TC","Microsoft JhengHei",sans-serif;
 }
 @media (prefers-color-scheme: dark){
@@ -18,7 +18,7 @@
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font-zh);line-height:1.7;-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font-body);line-height:1.7;-webkit-text-size-adjust:100%}
 a{color:var(--accent)}
 h2{font-size:22px;margin:0 0 16px;padding-bottom:8px;border-bottom:2px solid var(--ink)}
 h3{font-size:17px;margin:0 0 8px}
@@ -45,7 +45,7 @@ p+p{margin-top:.6em}
 .eyebrow{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--claim);font-weight:700;margin-bottom:8px}
 .thesis blockquote.en{font-family:var(--font-en);font-size:clamp(18px,2.4vw,23px);line-height:1.5;margin:0 0 10px;padding-left:16px;border-left:3px solid var(--claim)}
 .thesis cite,.ref{font-family:var(--font-ui);font-style:normal;font-size:11.5px;color:var(--muted);border:1px solid var(--line);border-radius:4px;padding:0 5px;white-space:nowrap}
-.thesis .zh{font-size:16.5px;margin-bottom:10px}
+.thesis .zh,.thesis .restate{font-size:16.5px;margin-bottom:10px}
 .plain{background:color-mix(in srgb,var(--claim) 8%,transparent);border-radius:8px;padding:10px 14px}
 .meta-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:16px}
 .meta-grid>div{border:1px solid var(--line);border-radius:8px;padding:10px 12px;font-size:14px}
@@ -144,12 +144,12 @@ details>*:not(summary){padding-bottom:12px}
   // strength dots
   document.querySelectorAll('.dots[data-score]').forEach(function(d){
     var n=Math.max(0,Math.min(5,parseInt(d.getAttribute('data-score'),10)||0));
-    d.textContent='●'.repeat(n)+'○'.repeat(5-n);d.setAttribute('aria-label','強度 '+n+'/5');
+    d.textContent='●'.repeat(n)+'○'.repeat(5-n);d.setAttribute('aria-label','Strength '+n+'/5');
   });
   // collapsible argument map
   document.querySelectorAll('.tree li').forEach(function(li){
     var node=li.querySelector(':scope>.node'),kids=li.querySelector(':scope>ul');
-    if(node&&kids){node.classList.add('has-kids');node.title='點擊展開／收合';
+    if(node&&kids){node.classList.add('has-kids');node.title='Click to expand / collapse';
       node.addEventListener('click',function(e){if(e.target.closest('a'))return;li.classList.toggle('collapsed')})}
   });
   // active nav link

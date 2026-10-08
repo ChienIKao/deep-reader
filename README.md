@@ -1,6 +1,6 @@
 # Deep Reader｜英文閱讀夥伴
 
-把英文論文、文章、小說（PDF／網址／貼上的文字）變成**可以直接用瀏覽器打開的中文學習頁面**。
+把英文論文、文章、小說（PDF／網址／貼上的文字）變成**可以直接用瀏覽器打開的學習頁面**：中英對照翻譯，以及英文的重點批註與邏輯梳理。
 遵循 [Agent Skills 開放標準](https://agentskills.io)，同一份 skill 可用於 **Claude**（網頁／桌面／Claude Code）、**ChatGPT**、**Codex**，以及 Gemini CLI、Cursor、GitHub Copilot 等支援 `SKILL.md` 的工具。
 
 ## 三種模式
@@ -8,7 +8,7 @@
 | 模式 | 你可以這樣說 | 產出 | 範例 |
 |---|---|---|---|
 | **① 中英對照翻譯** | 「把這篇翻成中文，中英對照」 | 左英文原文／右中文譯文，逐段對齊；可切換雙語／只看英文／只看中文、調整字級；附術語對照表 | [預覽](https://htmlpreview.github.io/?https://github.com/ChienIKao/deep-reader/blob/main/examples/civil-disobedience-translate.html) · [原始檔](examples/civil-disobedience-translate.html) |
-| **② 重點批註** | 「幫我做重點批註，這是 worksheet 題目：…」 | 頂部導航＋題號顏色圖例；左欄原文依題號彩色高亮；右欄逐段中文批註（段落功能／論證邏輯／回答哪題的哪個層次）；底部 Worksheet 答題索引（核心論點＋關鍵證據＋潛在反駁／局限） | [預覽](https://htmlpreview.github.io/?https://github.com/ChienIKao/deep-reader/blob/main/examples/civil-disobedience-annotate.html) · [原始檔](examples/civil-disobedience-annotate.html) |
+| **② 重點批註** | 「幫我做重點批註，這是 worksheet 題目：…」 | 頂部導航＋題號顏色圖例；左欄原文依題號彩色高亮；右欄逐段英文批註（Function／Reasoning／回答哪題的哪個層次）；底部 Worksheet 答題索引（Core Argument＋Key Evidence＋Counterpoints & Limits） | [預覽](https://htmlpreview.github.io/?https://github.com/ChienIKao/deep-reader/blob/main/examples/civil-disobedience-annotate.html) · [原始檔](examples/civil-disobedience-annotate.html) |
 | **③ 邏輯梳理** | 「幫我梳理這篇的論證邏輯」 | 核心主張、可收合的論證地圖（主張／理由／證據／隱含前提／反駁）、推進脈絡、Toulmin 拆解、論證檢驗（證據強度、謬誤風險、最強反駁）、關鍵概念、自我檢測 | [預覽](https://htmlpreview.github.io/?https://github.com/ChienIKao/deep-reader/blob/main/examples/civil-disobedience-logic.html) · [原始檔](examples/civil-disobedience-logic.html) |
 
 範例使用梭羅《公民不服從》（1849，公有領域）開篇七段。小說等敘事文本在「邏輯梳理」中會自動改用因果鏈、人物動機、敘事結構等分析框架。
@@ -68,7 +68,9 @@ Q3 How does this reading relate to Weber?
 （上傳 novel-chapter.pdf）三種都要
 ```
 
-沒給題目時，批註模式會自動擬 4–6 題導讀題並標示「AI 擬定」。預設輸出繁體中文（台灣用語），用簡體提問會改為簡體。
+沒給題目時，批註模式會自動擬 4–6 題導讀題並標示「AI-drafted」。
+
+**輸出語言：**只有譯文是中文（預設繁體中文、台灣用語；用簡體提問會改為簡體）。其他部分——頁面介面、重點批註、答題索引、邏輯梳理——都用英文輸出。想改成其他語言，修改 `SKILL.md` 的〈輸出語言〉一節。
 
 ## 專案結構
 
